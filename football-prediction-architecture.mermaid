@@ -1,0 +1,38 @@
+flowchart TB
+    subgraph Client["Interface Client"]
+        UI["Interface Utilisateur (React)"]
+        AUTH["Module d'Authentification"]
+    end
+
+    subgraph API["API Gateway (Node.js)"]
+        REST["API REST"]
+        VALID["Validation & Sécurité"]
+        CACHE["Cache (Redis)"]
+    end
+
+    subgraph Core["Coeur Métier (Python)"]
+        PRED["Moteur de Prédiction"]
+        STAT["Analyse Statistique"]
+        ML["Machine Learning Models"]
+    end
+
+    subgraph Data["Gestion des Données"]
+        DB[(PostgreSQL)]
+        FOOTBALL["API Football"]
+        MDB[(MongoDB)]
+    end
+
+    UI --> |"Requêtes HTTPS"| REST
+    AUTH --> |"OAuth 2.0"| REST
+    REST --> |"Validation"| VALID
+    VALID --> |"Données"| CACHE
+    
+    CACHE --> |"Cache Miss"| PRED
+    PRED --> |"Analyse"| STAT
+    STAT --> |"Entraînement"| ML
+    
+    PRED --> |"Lecture/Écriture"| DB
+    ML --> |"Historique"| DB
+    FOOTBALL --> |"Données temps réel"| MDB
+    DB --> |"Données structurées"| REST
+    MDB --> |"Données non-structurées"| REST

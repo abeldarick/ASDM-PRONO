@@ -1,0 +1,37 @@
+stateDiagram-v2
+    [*] --> Normal: Système opérationnel
+    Normal --> Alert: Incident détecté
+    
+    state Alert {
+        [*] --> Détection
+        Détection --> Classification
+        Classification --> PlanRecovery
+        PlanRecovery --> ExécutionPlan
+        ExécutionPlan --> Vérification
+    }
+    
+    Alert --> Failover: Incident critique
+    Alert --> Recovery: Incident majeur
+    Alert --> AutoResolve: Incident mineur
+    
+    state Failover {
+        [*] --> StopServices
+        StopServices --> SwitchInfra
+        SwitchInfra --> StartServices
+        StartServices --> VerifyHealth
+    }
+    
+    state Recovery {
+        [*] --> RestoreBackup
+        RestoreBackup --> ReconfigServices
+        ReconfigServices --> VerifyData
+    }
+    
+    Failover --> Normal: Succès
+    Recovery --> Normal: Succès
+    AutoResolve --> Normal: Résolution
+    
+    Failover --> Manual: Échec
+    Recovery --> Manual: Échec
+    
+    Manual --> [*]: Intervention humaine requise

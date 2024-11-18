@@ -1,0 +1,73 @@
+erDiagram
+    Users ||--o{ Predictions : creates
+    Users ||--o{ Subscriptions : has
+    Teams ||--o{ Matches : participates
+    Matches ||--o{ Predictions : has
+    Matches ||--o{ Statistics : contains
+    Players ||--o{ Teams : belongs
+    
+    Users {
+        uuid id PK
+        string email
+        string password_hash
+        string role
+        timestamp created_at
+        timestamp last_login
+    }
+
+    Subscriptions {
+        uuid id PK
+        uuid user_id FK
+        string plan_type
+        timestamp valid_until
+        boolean is_active
+    }
+
+    Teams {
+        uuid id PK
+        string name
+        string country
+        string league
+        json current_form
+        json historical_stats
+    }
+
+    Matches {
+        uuid id PK
+        uuid home_team_id FK
+        uuid away_team_id FK
+        timestamp match_date
+        string competition
+        string status
+        int home_score
+        int away_score
+        json weather_conditions
+    }
+
+    Predictions {
+        uuid id PK
+        uuid match_id FK
+        uuid user_id FK
+        float home_score_pred
+        float away_score_pred
+        float over_15_probability
+        json model_features
+        timestamp created_at
+    }
+
+    Statistics {
+        uuid id PK
+        uuid match_id FK
+        json possession_stats
+        json shooting_stats
+        json player_stats
+        timestamp updated_at
+    }
+
+    Players {
+        uuid id PK
+        string name
+        uuid current_team_id FK
+        json performance_stats
+        boolean is_active
+    }
